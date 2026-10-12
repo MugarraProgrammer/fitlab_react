@@ -1,0 +1,23 @@
+.navbar-brand-custom {
+  font-weight: 800;
+  text-transform: uppercase;
+  font-size: 1.6rem;
+  color: #ff7043;
+  letter-spacing: 1px;
+}
+
+.nav-btn-link {
+  color: #ffffff !important;
+  font-weight: 500;
+  transition: color 0.2s ease-in-out;
+}
+
+.nav-btn-link:hover {
+  color: #ff7043 !important;
+}
+
+.cart-badge-custom {
+  font-size: 0.75rem;
+  padding: 0.35em 0.65em;
+  border-radius: 50rem;
+}

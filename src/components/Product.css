@@ -1,0 +1,20 @@
+/* Estilos para la tarjeta individual de producto */
+.product-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #333;
+}
+
+.product-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 15px rgba(255, 112, 67, 0.2);
+}
+
+.product-img-placeholder {
+  height: 180px;
+  background-color: #2b3035;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff7043;
+  font-weight: bold;
+}
