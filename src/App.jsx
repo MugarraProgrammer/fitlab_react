@@ -1,51 +1,35 @@
-import React, { useState } from 'react';
-import Navbar from './components/Navbar';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
+// Componentes globales
+import Header from './components/Header';
 import Footer from './components/Footer';
-import Product from './components/Product';
 
-function App() {
-const [vistaActual, setVistaActual] = useState('home');
-const [itemsCarrito, setItemsCarrito] = useState([]);
+// Páginas de src/pages/
+import Home from './pages/Home';
+import Cart from './pages/Cart';
+import Login from './pages/Login';
+import Register from './pages/Register';
+import Admin from './pages/Admin';
 
-// Producto de prueba para previsualizar el componente Product
-const productoPrueba = {
-id: 1,
-nombre: 'Proteína Whey Isolate',
-descripcion: 'Proteína de suero de leche de rápida absorción 1kg.',
-precio: 34990,
-stock: 5
-};
+import './App.css';
 
-const agregarAlCarrito = (prod) => {
-setItemsCarrito([...itemsCarrito, prod]);
-};
-
-return (
-<div className="bg-dark min-vh-100 text-white d-flex flex-column">
-<Navbar
-cantCarrito={itemsCarrito.length}
-usuario={null}
-alCerrarSesion={() => {}}
-cambiarVista={setVistaActual}
-/>
-
-<main className="container my-5 flex-grow-1">
-<h4 className="text-warning mb-4">Mapeo preliminar de componentes:</h4>
-
-{/* Muestra tu tarjeta de producto en una columna */}
-<div className="row justify-content-center">
-<div className="col-md-5">
-<Product
-producto={productoPrueba}
-alAgregarAlCarrito={agregarAlCarrito}
-/>
-</div>
-</div>
-</main>
-
-<Footer />
-</div>
-);
+export default function App() {
+  return (
+    <Router>
+      <div className="site-wrapper d-flex flex-column min-vh-100">
+        <Header />
+        <main className="flex-grow-1" id="contenido">
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/cart" element={<Cart />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/admin" element={<Admin />} />
+          </Routes>
+        </main>
+        <Footer />
+      </div>
+    </Router>
+  );
 }
-
-export default App;
