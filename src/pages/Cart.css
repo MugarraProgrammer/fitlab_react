@@ -1,0 +1,21 @@
+.cart-page {
+  min-height: 70vh;
+}
+
+.cart-item-img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 8px;
+  background-color: #f3f3ef;
+}
+
+.cart-quantity-input {
+  width: 70px;
+}
+
+.cart-summary-card {
+  border: 1px solid #e6e6df;
+  border-radius: 12px;
+  background-color: #f7f8f3;
+}
