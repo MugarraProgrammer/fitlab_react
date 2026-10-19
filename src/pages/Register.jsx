@@ -1,119 +1,105 @@
 import React, { useState } from 'react';
-import './Register.css';
+import { useNavigate } from 'react-router-dom';
 
-export default function Register() {
-  const [formData, setFormData] = useState({
-    nombre: '',
-    email: '',
-    password: '',
-    confirmPassword: '',
-  });
-  const [status, setStatus] = useState('');
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
+function Register() {
+  const [nombre, setNombre] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (formData.password !== formData.confirmPassword) {
-      setStatus('Las contraseñas no coinciden.');
+    setError('');
+
+    if (!nombre.trim() || !email.trim() || !password || !confirmPassword) {
+      setError('Todos los campos son obligatorios.');
       return;
     }
-    setStatus('Cuenta creada exitosamente (Demostración).');
+
+    if (!email.includes('@') || !email.includes('.')) {
+      setError('Ingrese un formato de correo electrónico válido.');
+      return;
+    }
+
+    if (password.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres.');
+      return;
+    }
+
+    if (password !== confirmPassword) {
+      setError('Las contraseñas no coinciden.');
+      return;
+    }
+
+    // Registro exitoso
+    localStorage.setItem('usuario', JSON.stringify({ rol: 'user', user: email }));
+    navigate('/cart');
   };
 
   return (
-    <div className="register-page container my-5">
+    <div className="container py-5">
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-5">
-          <div className="card register-card p-4">
-            <h2 className="text-center mb-3">Crear Cuenta</h2>
-            <p className="text-center text-muted small mb-4">
-              Regístrate para acceder a todas las funciones de FitLab.
+        <div className="col-12 col-md-6 col-lg-5">
+          <div className="card shadow-sm border-0 p-4">
+            <h3 className="fw-bold text-center mb-2">Crear Cuenta</h3>
+            <p className="text-muted text-center small mb-4">
+              Regístrate para poder realizar el pago de tu pedido.
             </p>
+
+            {error && <div className="alert alert-danger py-2 small">{error}</div>}
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label" htmlFor="register-nombre">
-                  Nombre Completo
-                </label>
+                <label className="form-label fw-semibold">Nombre Completo</label>
                 <input
                   type="text"
-                  id="register-nombre"
-                  name="nombre"
                   className="form-control"
-                  placeholder="Tu nombre"
-                  value={formData.nombre}
-                  onChange={handleChange}
-                  required
+                  placeholder="Tu nombre completo"
+                  value={nombre}
+                  onChange={(e) => setNombre(e.target.value)}
                 />
               </div>
-
               <div className="mb-3">
-                <label className="form-label" htmlFor="register-email">
-                  Correo Electrónico
-                </label>
+                <label className="form-label fw-semibold">Correo Electrónico</label>
                 <input
                   type="email"
-                  id="register-email"
-                  name="email"
                   className="form-control"
                   placeholder="nombre@correo.com"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
-
               <div className="mb-3">
-                <label className="form-label" htmlFor="register-password">
-                  Contraseña
-                </label>
+                <label className="form-label fw-semibold">Contraseña</label>
                 <input
                   type="password"
-                  id="register-password"
-                  name="password"
                   className="form-control"
                   placeholder="••••••••"
-                  value={formData.password}
-                  onChange={handleChange}
-                  required
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
                 />
               </div>
-
-              <div className="mb-3">
-                <label className="form-label" htmlFor="register-confirmPassword">
-                  Confirmar Contraseña
-                </label>
+              <div className="mb-4">
+                <label className="form-label fw-semibold">Confirmar Contraseña</label>
                 <input
                   type="password"
-                  id="register-confirmPassword"
-                  name="confirmPassword"
                   className="form-control"
                   placeholder="••••••••"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
                 />
               </div>
-
-              <button type="submit" className="btn btn-dark w-100 mt-2">
-                Registrarse ↗
+              <button type="submit" className="btn btn-dark w-100 py-2">
+                Registrarse
               </button>
             </form>
-
-            {status && (
-              <div className="alert alert-info mt-3 mb-0 text-center small" role="status">
-                {status}
-              </div>
-            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default Register;

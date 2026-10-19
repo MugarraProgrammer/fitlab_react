@@ -1,74 +1,79 @@
 import React, { useState } from 'react';
-import './Login.css';
+import { useNavigate } from 'react-router-dom';
 
-export default function Login() {
+function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState('');
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (email && password) {
-      setStatus('Sesión iniciada correctamente (Demostración).');
+    setError('');
+
+    if (!email || !password) {
+      setError('Por favor complete todos los campos.');
+      return;
+    }
+
+    // Acceso para Administrador (admin / 1234)
+    if (email === 'admin' && password === '1234') {
+      localStorage.setItem('usuario', JSON.stringify({ rol: 'admin', user: 'admin' }));
+      navigate('/admin');
+      return;
+    }
+
+    // Login usuario comun
+    if (email.includes('@') && password.length >= 4) {
+      localStorage.setItem('usuario', JSON.stringify({ rol: 'user', user: email }));
+      navigate('/cart');
     } else {
-      setStatus('Por favor completa todos los campos.');
+      setError('Credenciales inválidas. Verifique sus datos.');
     }
   };
 
   return (
-    <div className="login-page container my-5">
+    <div className="container py-5">
       <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-5">
-          <div className="card login-card p-4">
-            <h2 className="text-center mb-3">Iniciar Sesión</h2>
-            <p className="text-center text-muted small mb-4">
-              Ingresa tus credenciales para acceder a tu cuenta de FitLab.
+        <div className="col-12 col-md-6 col-lg-5">
+          <div className="card shadow-sm border-0 p-4">
+            <h3 className="fw-bold text-center mb-2">Iniciar Sesión</h3>
+            <p className="text-muted text-center small mb-4">
+              Ingresa a tu cuenta para continuar.
             </p>
+
+            {error && <div className="alert alert-danger py-2 small">{error}</div>}
 
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label" htmlFor="login-email">
-                  Correo Electrónico
-                </label>
+                <label className="form-label fw-semibold">Usuario / Correo</label>
                 <input
-                  type="email"
-                  id="login-email"
+                  type="text"
                   className="form-control"
-                  placeholder="nombre@correo.com"
+                  placeholder="admin o tu@correo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  required
                 />
               </div>
-
-              <div className="mb-3">
-                <label className="form-label" htmlFor="login-password">
-                  Contraseña
-                </label>
+              <div className="mb-4">
+                <label className="form-label fw-semibold">Contraseña</label>
                 <input
                   type="password"
-                  id="login-password"
                   className="form-control"
                   placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  required
                 />
               </div>
-
-              <button type="submit" className="btn btn-dark w-100 mt-2">
-                Ingresar ↗
+              <button type="submit" className="btn btn-dark w-100 py-2">
+                Ingresar
               </button>
             </form>
-
-            {status && (
-              <div className="alert alert-info mt-3 mb-0 text-center small" role="status">
-                {status}
-              </div>
-            )}
           </div>
         </div>
       </div>
     </div>
   );
 }
+
+export default Login;

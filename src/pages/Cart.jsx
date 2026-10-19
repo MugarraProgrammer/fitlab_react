@@ -1,83 +1,123 @@
-import React from 'react';
-import './Cart.css';
+import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 
-export default function Cart() {
-  // Datos de muestra/ejemplo para el carrito
-  const cartItems = [
-    { id: 1, name: 'Zapatillas FitLab Runner', price: 49990, quantity: 1, image: 'https://via.placeholder.com/80' },
-    { id: 2, name: 'Mancuernas 10kg', price: 29990, quantity: 2, image: 'https://via.placeholder.com/80' },
-  ];
+function Cart({ cartItems, updateQuantity, removeFromCart, clearCart }) {
+  const [mensajeError, setMensajeError] = useState('');
+  const navigate = useNavigate();
 
-  const total = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const totalProductos = cartItems.reduce((acc, item) => acc + item.cantidad, 0);
+  const totalPrecio = cartItems.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+
+  const procederAlPago = () => {
+    const usuario = JSON.parse(localStorage.getItem('usuario'));
+
+    if (!usuario) {
+      setMensajeError('Debes iniciar sesión para realizar la compra.');
+      return;
+    }
+
+    alert('¡Compra realizada con éxito!');
+    clearCart();
+    navigate('/');
+  };
 
   return (
-    <div className="cart-page container my-5">
-      <h2 className="mb-4">Carrito de Compras</h2>
+    <div className="container py-5">
+      <h2 className="fw-bold mb-4 text-center">Carrito de Compras</h2>
+
+      {mensajeError && (
+        <div className="alert alert-warning text-center mb-4">
+          {mensajeError}{' '}
+          <Link to="/login" className="fw-bold text-dark">
+            Iniciar sesión aquí
+          </Link>
+        </div>
+      )}
 
       {cartItems.length === 0 ? (
-        <div className="alert alert-info">Tu carrito está vacío.</div>
+        <div className="text-center py-5">
+          <p className="text-muted fs-5">Tu carrito está vacío.</p>
+          <Link to="/" className="btn btn-dark">
+            Volver a la tienda
+          </Link>
+        </div>
       ) : (
         <div className="row g-4">
-          <div className="col-lg-8">
-            <div className="table-responsive">
-              <table className="table align-middle">
-                <thead>
-                  <tr>
-                    <th>Producto</th>
-                    <th>Precio</th>
-                    <th>Cantidad</th>
-                    <th>Subtotal</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {cartItems.map((item) => (
-                    <tr key={item.id}>
-                      <td>
-                        <div className="d-flex align-items-center gap-3">
-                          <img src={item.image} alt={item.name} className="cart-item-img" />
-                          <span className="fw-semibold">{item.name}</span>
-                        </div>
-                      </td>
-                      <td>${item.price.toLocaleString('es-CL')}</td>
-                      <td>
-                        <input
-                          type="number"
-                          className="form-control form-control-sm cart-quantity-input"
-                          defaultValue={item.quantity}
-                          min="1"
-                        />
-                      </td>
-                      <td>${(item.price * item.quantity).toLocaleString('es-CL')}</td>
-                      <td>
-                        <button className="btn btn-outline-danger btn-sm" title="Eliminar">
-                          &times;
-                        </button>
-                      </td>
+          <div className="col-12 col-lg-8">
+            <div className="card border-0 shadow-sm p-3">
+              <div className="table-responsive">
+                <table className="table align-middle mb-0">
+                  <thead>
+                    <tr>
+                      <th>Producto</th>
+                      <th>Precio</th>
+                      <th>Cantidad</th>
+                      <th>Total parcial</th>
+                      <th className="text-end">Acciones</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {cartItems.map((item) => (
+                      <tr key={item.id}>
+                        <td>
+                          <div className="fw-bold">{item.nombre}</div>
+                          <small className="text-muted">{item.categoria}</small>
+                        </td>
+                        <td>${item.precio.toLocaleString('es-CL')}</td>
+                        <td>
+                          <div className="d-flex align-items-center gap-2">
+                            <button
+                              className="btn btn-outline-secondary btn-sm px-2 py-0"
+                              onClick={() => updateQuantity(item.id, -1)}
+                            >
+                              -
+                            </button>
+                            <span className="fw-bold">{item.cantidad}</span>
+                            <button
+                              className="btn btn-outline-secondary btn-sm px-2 py-0"
+                              onClick={() => updateQuantity(item.id, 1)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </td>
+                        <td className="fw-bold">
+                          ${(item.precio * item.cantidad).toLocaleString('es-CL')}
+                        </td>
+                        <td className="text-end">
+                          <button
+                            className="btn btn-outline-danger btn-sm"
+                            onClick={() => removeFromCart(item.id)}
+                          >
+                            Eliminar
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
             </div>
           </div>
 
-          <div className="col-lg-4">
-            <div className="card cart-summary-card p-3">
-              <h4 className="card-title mb-3">Resumen del Pedido</h4>
+          <div className="col-12 col-lg-4">
+            <div className="card border-0 shadow-sm p-4">
+              <h5 className="fw-bold mb-3">Resumen de Compra</h5>
               <div className="d-flex justify-content-between mb-2">
-                <span>Subtotal:</span>
-                <span>${total.toLocaleString('es-CL')}</span>
-              </div>
-              <div className="d-flex justify-content-between mb-3">
-                <span>Envío:</span>
-                <span className="text-success fw-semibold">Gratis</span>
+                <span>Total de productos:</span>
+                <span className="fw-bold">{totalProductos}</span>
               </div>
               <hr />
-              <div className="d-flex justify-content-between fs-5 fw-bold mb-4">
-                <span>Total:</span>
-                <span>${total.toLocaleString('es-CL')}</span>
+              <div className="d-flex justify-content-between mb-4 fs-5 fw-bold">
+                <span>Total a pagar:</span>
+                <span>${totalPrecio.toLocaleString('es-CL')}</span>
               </div>
-              <button className="btn btn-dark w-100">Proceder al Pago ↗</button>
+              <button
+                className="btn btn-dark w-100 py-2 fw-semibold"
+                onClick={procederAlPago}
+              >
+                Proceder al Pago
+              </button>
             </div>
           </div>
         </div>
@@ -85,3 +125,5 @@ export default function Cart() {
     </div>
   );
 }
+
+export default Cart;

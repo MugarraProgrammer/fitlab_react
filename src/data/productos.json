@@ -1,0 +1,98 @@
+[
+  {
+    "id": 1,
+    "nombre": "Creatina Monohidratada 300g",
+    "precio": 24990,
+    "categoria": "Suplementos",
+    "descripcion": "Aumenta la fuerza y potencia muscular.",
+    "imagen": "https://images.unsplash.com/photo-1593095948071-474c5cc2989d?w=500"
+  },
+  {
+    "id": 2,
+    "nombre": "Proteína Whey Isolate 1kg",
+    "precio": 38990,
+    "categoria": "Suplementos",
+    "descripcion": "Proteína de rápida absorción para recuperación.",
+    "imagen": "https://images.unsplash.com/photo-1579722820308-d74e571900a9?w=500"
+  },
+  {
+    "id": 3,
+    "nombre": "BCAA Aminoácidos 200g",
+    "precio": 18990,
+    "categoria": "Suplementos",
+    "descripcion": "Reduce la fatiga en entrenamientos intensos.",
+    "imagen": "https://images.unsplash.com/photo-1546483875-ad9014c88eba?w=500"
+  },
+  {
+    "id": 4,
+    "nombre": "Banda de Resistencia Alta",
+    "precio": 8990,
+    "categoria": "Accesorios",
+    "descripcion": "Banda elástica para ejercicios de fuerza.",
+    "imagen": "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=500"
+  },
+  {
+    "id": 5,
+    "nombre": "Mancuernas Hexagonales 10kg (Par)",
+    "precio": 45990,
+    "categoria": "Equipamiento",
+    "descripcion": "Mancuernas gomas antideslizantes para casa o gimnasio.",
+    "imagen": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500"
+  },
+  {
+    "id": 6,
+    "nombre": "Mancuernas Hexagonales 5kg (Par)",
+    "precio": 25990,
+    "categoria": "Equipamiento",
+    "descripcion": "Ideales para tono muscular y tonificación.",
+    "imagen": "https://images.unsplash.com/photo-1583454110551-21f2fa2afe61?w=500"
+  },
+  {
+    "id": 7,
+    "nombre": "Banda Elástica Media",
+    "precio": 7990,
+    "categoria": "Accesorios",
+    "descripcion": "Tensión media para estiramiento y rehabilitación.",
+    "imagen": "https://images.unsplash.com/photo-1518611012118-696072aa579a?w=500"
+  },
+  {
+    "id": 8,
+    "nombre": "Shaker Botella FitLab 700ml",
+    "precio": 5990,
+    "categoria": "Accesorios",
+    "descripcion": "Botella mezcladora libre de BPA.",
+    "imagen": "https://images.unsplash.com/photo-1550583724-b2692b85b150?w=500"
+  },
+  {
+    "id": 9,
+    "nombre": "Multivitamínico Deportivo 90 Caps",
+    "precio": 14990,
+    "categoria": "Suplementos",
+    "descripcion": "Aporte diario de micronutrientes para deportistas.",
+    "imagen": "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=500"
+  },
+  {
+    "id": 10,
+    "nombre": "Pre-Entreno NitroX 300g",
+    "precio": 29990,
+    "categoria": "Suplementos",
+    "descripcion": "Fórmula con cafeína y beta-alanina para energía.",
+    "imagen": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=500"
+  },
+  {
+    "id": 11,
+    "nombre": "Banda de Resistencia Suave",
+    "precio": 6990,
+    "categoria": "Accesorios",
+    "descripcion": "Banda ligera para movilidad y calentamiento.",
+    "imagen": "https://images.unsplash.com/photo-1598289431512-b97b0917affc?w=500"
+  },
+  {
+    "id": 12,
+    "nombre": "Set de Mancuernas Ajustables 20kg",
+    "precio": 79900,
+    "categoria": "Equipamiento",
+    "descripcion": "Set con maleta y discos intercambiables.",
+    "imagen": "https://images.unsplash.com/photo-1584735935682-2f2b69dff9d2?w=500"
+  }
+]
