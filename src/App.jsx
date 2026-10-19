@@ -27,7 +27,7 @@ function App() {
       const exists = prev.find((item) => item.id === product.id);
       if (exists) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, cantidad: item.cantidad + 1 } : item
+          item.id === product.id ? { ...item, cantidad: (item.cantidad || 1) + 1 } : item
         );
       }
       return [...prev, { ...product, cantidad: 1 }];
@@ -39,7 +39,8 @@ function App() {
       prev
         .map((item) => {
           if (item.id === id) {
-            const newQty = item.cantidad + delta;
+            const currentQty = item.cantidad || 1;
+            const newQty = currentQty + delta;
             return newQty > 0 ? { ...item, cantidad: newQty } : null;
           }
           return item;
@@ -56,8 +57,8 @@ function App() {
     setCartItems([]);
   };
 
-  // Suma total de unidades
-  const totalItemsCount = cartItems.reduce((acc, item) => acc + item.cantidad, 0);
+  // Suma total de unidades garantizada
+  const totalItemsCount = cartItems.reduce((acc, item) => acc + (Number(item.cantidad) || 1), 0);
 
   return (
     <Router>

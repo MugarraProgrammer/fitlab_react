@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom'; // <--- Importar Link
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -16,7 +16,7 @@ function Login() {
       return;
     }
 
-    // Acceso para Administrador (admin / 1234)
+    // Acceso Administrador (admin / 1234)
     if (email === 'admin' && password === '1234') {
       localStorage.setItem('usuario', JSON.stringify({ rol: 'admin', user: 'admin' }));
       navigate('/admin');
@@ -69,6 +69,15 @@ function Login() {
                 Ingresar
               </button>
             </form>
+
+            {/* Hipervínculo para Registrarse */}
+            <div className="text-center mt-3 pt-3 border-top">
+              <span className="text-muted small">¿No tienes una cuenta? </span>
+              <Link to="/register" className="text-dark fw-bold small text-decoration-underline">
+                Regístrate aquí
+              </Link>
+            </div>
+
           </div>
         </div>
       </div>

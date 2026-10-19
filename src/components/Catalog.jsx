@@ -52,12 +52,14 @@ function Catalog({ addToCart }) {
         {productosActuales.map((producto) => (
           <div key={producto.id} className="col-12 col-md-6">
             <div className="card h-100 shadow-sm border-0 overflow-hidden">
-              <img
-                src={producto.imagen}
-                className="card-img-top w-100"
-                alt={producto.nombre}
-                style={{ height: '260px', objectFit: 'cover' }}
-              />
+              <div className="bg-light d-flex align-items-center justify-content-center p-3" style={{ height: '260px' }}>
+                <img
+                  src={producto.imagen}
+                  alt={producto.nombre}
+                  style={{ maxHeight: '100%', maxWidth: '100%', objectFit: 'contain' }}
+                />
+              </div>
+
               <div className="card-body d-flex flex-column p-4">
                 <div>
                   <span className="badge bg-secondary mb-2">

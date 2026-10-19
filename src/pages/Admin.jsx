@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import productosData from '../data/productos.json';
-import './Admin.css';
 
-export default function Admin() {
-  // Carga los productos desde localStorage o desde productos.json
+function Admin() {
   const [productos, setProductos] = useState(() => {
     const guardados = localStorage.getItem('productos');
     return guardados ? JSON.parse(guardados) : productosData;
@@ -11,35 +9,35 @@ export default function Admin() {
 
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [editandoId, setEditandoId] = useState(null);
-  const [formData, setFormData] = useState({ id: '', nombre: '', precio: '', imagen: '' });
+  const [formData, setFormData] = useState({ id: '', nombre: '', precio: '', stock: 10 });
 
-  // Guarda en localStorage cada vez que la lista cambia
   useEffect(() => {
     localStorage.setItem('productos', JSON.stringify(productos));
   }, [productos]);
 
-  // Abrir formulario para crear un nuevo producto
   const handleNuevo = () => {
     setEditandoId(null);
-    setFormData({ id: Date.now(), nombre: '', precio: '', imagen: '' });
+    setFormData({ id: Date.now(), nombre: '', precio: '', stock: 10 });
     setMostrarFormulario(true);
   };
 
-  // Abrir formulario para editar producto existente
   const handleEditar = (prod) => {
     setEditandoId(prod.id);
-    setFormData(prod);
+    setFormData({
+      id: prod.id,
+      nombre: prod.nombre,
+      precio: prod.precio,
+      stock: prod.stock !== undefined ? prod.stock : 10
+    });
     setMostrarFormulario(true);
   };
 
-  // Eliminar producto
   const handleEliminar = (id) => {
     if (window.confirm('¿Estás seguro de que deseas eliminar este producto?')) {
       setProductos(productos.filter((prod) => prod.id !== id));
     }
   };
 
-  // Guardar (Crear o Modificar)
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!formData.nombre || !formData.precio) return;
@@ -51,14 +49,14 @@ export default function Admin() {
     }
 
     setMostrarFormulario(false);
-    setFormData({ id: '', nombre: '', precio: '', imagen: '' });
+    setFormData({ id: '', nombre: '', precio: '', stock: 10 });
   };
 
   return (
     <div className="admin-page container my-5">
       <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Panel de Administración</h2>
-        <button className="btn btn-dark btn-sm" onClick={handleNuevo}>
+        <h2 className="fw-bold">Panel de Administración</h2>
+        <button className="btn btn-dark" onClick={handleNuevo}>
           + Agregar Producto
         </button>
       </div>
@@ -66,11 +64,11 @@ export default function Admin() {
       {/* Formulario para Agregar / Editar */}
       {mostrarFormulario && (
         <div className="card card-body mb-4 bg-light shadow-sm">
-          <h4>{editandoId !== null ? 'Editar Producto' : 'Nuevo Producto'}</h4>
+          <h4 className="fw-bold mb-3">{editandoId !== null ? 'Editar Producto' : 'Nuevo Producto'}</h4>
           <form onSubmit={handleSubmit}>
             <div className="row g-3">
               <div className="col-md-5">
-                <label className="form-label">Nombre</label>
+                <label className="form-label fw-semibold">Nombre</label>
                 <input
                   type="text"
                   className="form-control"
@@ -80,7 +78,7 @@ export default function Admin() {
                 />
               </div>
               <div className="col-md-3">
-                <label className="form-label">Precio ($)</label>
+                <label className="form-label fw-semibold">Precio ($)</label>
                 <input
                   type="number"
                   className="form-control"
@@ -90,22 +88,24 @@ export default function Admin() {
                 />
               </div>
               <div className="col-md-4">
-                <label className="form-label">Ruta de Imagen (Ej: /src/assets/hero.png)</label>
+                <label className="form-label fw-semibold">Cantidad (Stock)</label>
                 <input
-                  type="text"
+                  type="number"
                   className="form-control"
-                  value={formData.imagen || ''}
-                  onChange={(e) => setFormData({ ...formData, imagen: e.target.value })}
+                  value={formData.stock}
+                  onChange={(e) => setFormData({ ...formData, stock: Number(e.target.value) })}
+                  min="0"
+                  required
                 />
               </div>
             </div>
-            <div className="mt-3">
-              <button type="submit" className="btn btn-success btn-sm me-2">
+            <div className="mt-4">
+              <button type="submit" className="btn btn-success me-2">
                 {editandoId !== null ? 'Guardar Cambios' : 'Agregar'}
               </button>
               <button
                 type="button"
-                className="btn btn-secondary btn-sm"
+                className="btn btn-secondary"
                 onClick={() => setMostrarFormulario(false)}
               >
                 Cancelar
@@ -115,38 +115,58 @@ export default function Admin() {
         </div>
       )}
 
-      {/* Tabla de Productos */}
-      <div className="table-responsive">
-        <table className="table table-striped align-middle">
-          <thead>
+      {/* Tabla de Productos con Columna Stock */}
+      <div className="table-responsive shadow-sm rounded">
+        <table className="table align-middle mb-0">
+          <thead className="table-light">
             <tr>
-              <th>ID</th>
+              <th>IDENTIFICACIÓN</th>
               <th>Producto</th>
               <th>Precio</th>
-              <th>Acciones</th>
+              <th>Stock</th>
+              <th className="text-end">Acciones</th>
             </tr>
           </thead>
           <tbody>
-            {productos.map((prod) => (
-              <tr key={prod.id}>
-                <td>#{prod.id}</td>
-                <td>{prod.nombre}</td>
-                <td>${Number(prod.precio).toLocaleString('es-CL')}</td>
-                <td>
-                  <div className="btn-group btn-group-sm">
-                    <button className="btn btn-outline-secondary" onClick={() => handleEditar(prod)}>
-                      Editar
-                    </button>
-                    <button className="btn btn-outline-danger" onClick={() => handleEliminar(prod.id)}>
-                      Eliminar
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
+            {productos.map((prod, index) => {
+              const stockActual = prod.stock !== undefined ? prod.stock : 10;
+              const bajoStock = stockActual <= 3;
+
+              return (
+                <tr key={prod.id || index} className={bajoStock ? 'table-warning' : ''}>
+                  <td className="fw-bold"># {prod.id || index + 1}</td>
+                  <td>
+                    {prod.nombre}
+                    {bajoStock && (
+                      <span className="badge bg-danger ms-2">
+                        Comprar producto bajo stock
+                      </span>
+                    )}
+                  </td>
+                  <td>${Number(prod.precio).toLocaleString('es-CL')}</td>
+                  <td>
+                    <span className={`fw-bold ${bajoStock ? 'text-danger' : 'text-dark'}`}>
+                      {stockActual} un.
+                    </span>
+                  </td>
+                  <td className="text-end">
+                    <div className="btn-group btn-group-sm">
+                      <button className="btn btn-outline-secondary" onClick={() => handleEditar(prod)}>
+                        Editar
+                      </button>
+                      <button className="btn btn-outline-danger" onClick={() => handleEliminar(prod.id)}>
+                        Eliminar
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>
     </div>
   );
 }
+
+export default Admin;
