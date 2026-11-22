@@ -1,66 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import React from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function Header({ totalItems }) {
-  const [usuario, setUsuario] = useState(null);
+export default function Header({ cart = [] }) {
+  const { usuario, estaAutenticado, esAdmin, logout } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
 
-  useEffect(() => {
-    const usuarioGuardado = localStorage.getItem('usuario');
-    if (usuarioGuardado) {
-      setUsuario(JSON.parse(usuarioGuardado));
-    } else {
-      setUsuario(null);
-    }
-  }, [location]);
+  const totalItems = cart.reduce((acc, item) => acc + (item.quantity || 1), 0);
 
-  const handleCerrarSesion = () => {
-    localStorage.removeItem('usuario');
-    setUsuario(null);
+  const manejarLogout = () => {
+    logout();
     navigate('/');
   };
 
   return (
-    <header className="bg-white border-bottom shadow-sm sticky-top">
-      <div className="container d-flex justify-content-between align-items-center py-3">
-        <Link to="/" className="text-decoration-none text-dark d-flex align-items-center gap-2">
-          <span className="fs-3 fw-bold tracking-tight">FITLAB</span>
+    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div className="container">
+        <Link className="navbar-brand fw-bold" to="/">
+          FitLab
         </Link>
 
-        <nav className="d-flex align-items-center gap-3">
-          <Link to="/" className="text-decoration-none text-dark fw-semibold">
-            Inicio
-          </Link>
-          
-          <Link to="/cart" className="text-decoration-none text-dark fw-semibold">
-            Carrito ({totalItems})
-          </Link>
+        <button
+          className="navbar-toggler"
+          type="button"
+          data-bs-toggle="collapse"
+          data-bs-target="#navbarFitLab"
+        >
+          <span className="navbar-toggler-icon"></span>
+        </button>
 
-          {usuario && usuario.rol === 'admin' && (
-            <Link to="/admin" className="btn btn-dark btn-sm fw-semibold">
-              Administración
-            </Link>
-          )}
+        <div className="collapse navbar-collapse" id="navbarFitLab">
+          <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+            <li className="nav-item">
+              <Link className="nav-link" to="/">
+                Inicio
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/cart">
+                Carrito ({totalItems})
+              </Link>
+            </li>
+            {esAdmin && (
+              <li className="nav-item">
+                <Link className="nav-link text-warning fw-semibold" to="/admin">
+                  Administración
+                </Link>
+              </li>
+            )}
+          </ul>
 
-          {usuario ? (
-            <button onClick={handleCerrarSesion} className="btn btn-outline-danger btn-sm">
-              Cerrar Sesión
-            </button>
-          ) : (
-            <>
-              <Link to="/login" className="btn btn-outline-dark btn-sm">
-                Iniciar Sesión
-              </Link>
-              <Link to="/register" className="btn btn-warning btn-sm fw-semibold">
-                Registrarse
-              </Link>
-            </>
-          )}
-        </nav>
+          <div className="d-flex align-items-center gap-2">
+            {estaAutenticado ? (
+              <>
+                <span className="text-light small me-2">
+                  {usuario?.nombre || usuario?.correo}
+                </span>
+                <button
+                  className="btn btn-outline-light btn-sm"
+                  onClick={manejarLogout}
+                >
+                  Cerrar sesión
+                </button>
+              </>
+            ) : (
+              <>
+                <Link className="btn btn-outline-light btn-sm" to="/login">
+                  Iniciar sesión
+                </Link>
+                <Link className="btn btn-light btn-sm" to="/register">
+                  Registrarse
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
       </div>
-    </header>
+    </nav>
   );
 }
-
-export default Header;

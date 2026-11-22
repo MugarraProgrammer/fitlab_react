@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import productosData from '../data/productos.json';
 
-function Catalog({ addToCart }) {
-  const productos = Array.isArray(productosData) ? productosData : [];
+// Los productos llegan por props desde Home, que los pide a la API (MongoDB).
+function Catalog({ addToCart, productos = [], cargando = false, error = false }) {
   const [paginaActual, setPaginaActual] = useState(1);
   const [productoAyudaId, setProductoAyudaId] = useState(null);
 
@@ -25,7 +24,7 @@ function Catalog({ addToCart }) {
 
   const obtenerInstruccionUso = (producto) => {
     const nombre = producto.nombre.toLowerCase();
-    
+        
     if (nombre.includes('creatina')) {
       return 'Modo de uso: Tomar entre 3 a 5 gramos diarios disueltos en agua o jugo de manera constante todos los días.';
     }
@@ -47,7 +46,17 @@ function Catalog({ addToCart }) {
   return (
     <section className="my-5">
       <h2 className="text-center fw-bold mb-4">Nuestros Productos</h2>
-      
+
+      {cargando && <p className="text-center text-muted" role="status">Cargando productos…</p>}
+      {error && (
+        <div className="alert alert-danger text-center" role="alert">
+          No se pudo cargar el catálogo. Revisa que el backend esté encendido.
+        </div>
+      )}
+      {!cargando && !error && productos.length === 0 && (
+        <p className="text-center text-muted">No hay productos disponibles.</p>
+      )}
+            
       <div className="row g-4">
         {productosActuales.map((producto) => (
           <div key={producto.id} className="col-12 col-md-6">
@@ -81,7 +90,7 @@ function Catalog({ addToCart }) {
                   <span className="fw-bold fs-5">
                     ${producto.precio ? producto.precio.toLocaleString('es-CL') : '0'}
                   </span>
-                  
+                                    
                   <div className="d-flex gap-2">
                     <button
                       className="btn btn-outline-secondary btn-sm"
@@ -89,7 +98,7 @@ function Catalog({ addToCart }) {
                     >
                       {productoAyudaId === producto.id ? 'Ocultar' : 'Ayuda'}
                     </button>
-                    
+                                        
                     <button
                       className="btn btn-dark btn-sm"
                       onClick={() => addToCart(producto)}
@@ -105,28 +114,28 @@ function Catalog({ addToCart }) {
       </div>
 
       {totalPaginas > 1 && (
-        <div className="d-flex justify-content-center align-items-center mt-4 gap-2">
-          <button
-            className="btn btn-outline-dark btn-sm"
-            onClick={() => cambiarPagina(paginaActual - 1)}
-            disabled={paginaActual === 1}
-          >
-            &lt;
-          </button>
+     <div className="d-flex justify-content-center align-items-center mt-4 gap-2">
+       <button
+         className="btn btn-outline-dark btn-sm"
+         onClick={() => cambiarPagina(paginaActual - 1)}
+         disabled={paginaActual === 1}
+       >
+         {'<'}
+       </button>
 
-          <span className="mx-2 fw-semibold small">
-            Página {paginaActual} de {totalPaginas}
-          </span>
+       <span className="mx-2 fw-semibold small">
+         Página {paginaActual} de {totalPaginas}
+       </span>
 
-          <button
-            className="btn btn-outline-dark btn-sm"
-            onClick={() => cambiarPagina(paginaActual + 1)}
-            disabled={paginaActual === totalPaginas}
-          >
-            &gt;
-          </button>
-        </div>
-      )}
+       <button
+         className="btn btn-outline-dark btn-sm"
+         onClick={() => cambiarPagina(paginaActual + 1)}
+         disabled={paginaActual === totalPaginas}
+       >
+         {'>'}
+       </button>
+     </div>
+   )}
     </section>
   );
 }

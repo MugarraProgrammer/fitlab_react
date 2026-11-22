@@ -1,7 +1,11 @@
 import React from 'react';
 import Catalog from '../components/Catalog';
+import useProductos from '../hooks/useProductos';
 
 function Home({ addToCart }) {
+  // Pide GET /api/productos al backend al montar la página.
+  const { productos, cargando, error } = useProductos();
+
   return (
     <div className="container py-4">
       {/* Sección Promocional con Video */}
@@ -10,7 +14,7 @@ function Home({ addToCart }) {
         <p className="lead text-muted mb-4">
           Equipamiento y suplementación de alta calidad para potenciar tu rendimiento.
         </p>
-        
+                
         {/* Contenedor de Video Local */}
         <div className="row justify-content-center">
           <div className="col-lg-10">
@@ -32,7 +36,7 @@ function Home({ addToCart }) {
       </section>
 
       {/* Catálogo de Productos */}
-      <Catalog addToCart={addToCart} />
+      <Catalog addToCart={addToCart} productos={productos} cargando={cargando} error={error} />
     </div>
   );
 }

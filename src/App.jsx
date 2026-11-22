@@ -1,91 +1,81 @@
-import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-
+import React, { useState } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import Footer from './components/Footer';
-
-import Home from './pages/Home';
+import RutaProtegida from './components/RutaProtegida';
+import { AuthProvider } from './context/AuthContext';
+import Admin from './pages/Admin';
 import Cart from './pages/Cart';
+import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Admin from './pages/Admin';
-
-import './App.css';
 
 function App() {
-  const [cartItems, setCartItems] = useState(() => {
-    const saved = localStorage.getItem('carrito');
-    return saved ? JSON.parse(saved) : [];
-  });
+  const [cart, setCart] = useState([]);
 
-  useEffect(() => {
-    localStorage.setItem('carrito', JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  const addToCart = (product) => {
-    setCartItems((prev) => {
-      const exists = prev.find((item) => item.id === product.id);
-      if (exists) {
+  const addToCart = (producto) => {
+    setCart((prev) => {
+      const existe = prev.find((item) => item.id === producto.id);
+      if (existe) {
         return prev.map((item) =>
-          item.id === product.id ? { ...item, cantidad: (item.cantidad || 1) + 1 } : item
+          item.id === producto.id
+            ? { ...item, quantity: (item.quantity || 1) + 1 }
+            : item
         );
       }
-      return [...prev, { ...product, cantidad: 1 }];
+      return [...prev, { ...producto, quantity: 1 }];
     });
   };
 
-  const updateQuantity = (id, delta) => {
-    setCartItems((prev) =>
-      prev
-        .map((item) => {
-          if (item.id === id) {
-            const currentQty = item.cantidad || 1;
-            const newQty = currentQty + delta;
-            return newQty > 0 ? { ...item, cantidad: newQty } : null;
-          }
-          return item;
-        })
-        .filter(Boolean)
+  const removeFromCart = (id) => {
+    setCart((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const updateQuantity = (id, nuevaCantidad) => {
+    if (nuevaCantidad <= 0) {
+      removeFromCart(id);
+      return;
+    }
+    setCart((prev) =>
+      prev.map((item) =>
+        item.id === id ? { ...item, quantity: nuevaCantidad } : item
+      )
     );
   };
 
-  const removeFromCart = (id) => {
-    setCartItems((prev) => prev.filter((item) => item.id !== id));
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
-  };
-
-  // Suma total de unidades garantizada
-  const totalItemsCount = cartItems.reduce((acc, item) => acc + (Number(item.cantidad) || 1), 0);
+  const clearCart = () => setCart([]);
 
   return (
-    <Router>
-      <div className="site-wrapper d-flex flex-column min-vh-100 bg-white text-dark">
-        <Header totalItems={totalItemsCount} />
-        <main className="flex-grow-1" id="contenido">
+    <AuthProvider>
+      <BrowserRouter>
+        <Header cart={cart} />
+        <main>
           <Routes>
             <Route path="/" element={<Home addToCart={addToCart} />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<Register />} />
             <Route
               path="/cart"
               element={
                 <Cart
-                  cartItems={cartItems}
-                  updateQuantity={updateQuantity}
+                  cart={cart}
                   removeFromCart={removeFromCart}
+                  updateQuantity={updateQuantity}
                   clearCart={clearCart}
                 />
               }
             />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/admin" element={<Admin />} />
+            <Route
+              path="/admin"
+              element={
+                <RutaProtegida rolRequerido="ADMIN">
+                  <Admin />
+                </RutaProtegida>
+              }
+            />
           </Routes>
         </main>
-        <Footer />
-      </div>
-    </Router>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

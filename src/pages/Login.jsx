@@ -1,88 +1,88 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // <--- Importar Link
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
-function Login() {
+export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [cargando, setCargando] = useState(false);
+
+  const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const manejarSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    setCargando(true);
 
-    if (!email || !password) {
-      setError('Por favor complete todos los campos.');
-      return;
-    }
-
-    // Acceso Administrador (admin / 1234)
-    if (email === 'admin' && password === '1234') {
-      localStorage.setItem('usuario', JSON.stringify({ rol: 'admin', user: 'admin' }));
-      navigate('/admin');
-      return;
-    }
-
-    // Login usuario comun
-    if (email.includes('@') && password.length >= 4) {
-      localStorage.setItem('usuario', JSON.stringify({ rol: 'user', user: email }));
-      navigate('/cart');
-    } else {
-      setError('Credenciales inválidas. Verifique sus datos.');
+    try {
+      const data = await login({ email, password });
+      if (data.rol === 'ADMIN' || data.rol === 'ROLE_ADMIN') {
+        navigate('/admin');
+      } else {
+        navigate('/');
+      }
+    } catch {
+      setError('Correo o contraseña incorrectos.');
+    } finally {
+      setCargando(false);
     }
   };
 
   return (
     <div className="container py-5">
       <div className="row justify-content-center">
-        <div className="col-12 col-md-6 col-lg-5">
+        <div className="col-md-5">
           <div className="card shadow-sm border-0 p-4">
-            <h3 className="fw-bold text-center mb-2">Iniciar Sesión</h3>
-            <p className="text-muted text-center small mb-4">
-              Ingresa a tu cuenta para continuar.
-            </p>
+            <h2 className="text-center fw-bold mb-4">Iniciar Sesión</h2>
 
-            {error && <div className="alert alert-danger py-2 small">{error}</div>}
+            {error && (
+              <div className="alert alert-danger py-2 small" role="alert">
+                {error}
+              </div>
+            )}
 
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={manejarSubmit}>
               <div className="mb-3">
-                <label className="form-label fw-semibold">Usuario / Correo</label>
+                <label className="form-label fw-semibold">Correo electrónico</label>
                 <input
-                  type="text"
+                  type="email"
                   className="form-control"
-                  placeholder="admin o tu@correo.com"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@fitlab.cl"
+                  required
                 />
               </div>
+
               <div className="mb-4">
                 <label className="form-label fw-semibold">Contraseña</label>
                 <input
                   type="password"
                   className="form-control"
-                  placeholder="••••••••"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
                 />
               </div>
-              <button type="submit" className="btn btn-dark w-100 py-2">
-                Ingresar
+
+              <button
+                type="submit"
+                className="btn btn-dark w-100 fw-semibold"
+                disabled={cargando}
+              >
+                {cargando ? 'Ingresando...' : 'Ingresar'}
               </button>
             </form>
 
-            {/* Hipervínculo para Registrarse */}
-            <div className="text-center mt-3 pt-3 border-top">
-              <span className="text-muted small">¿No tienes una cuenta? </span>
-              <Link to="/register" className="text-dark fw-bold small text-decoration-underline">
-                Regístrate aquí
-              </Link>
-            </div>
-
+            <p className="text-center text-muted small mt-3 mb-0">
+              ¿No tienes cuenta? <Link to="/register">Regístrate aquí</Link>
+            </p>
           </div>
         </div>
       </div>
     </div>
   );
 }
-
-export default Login;
