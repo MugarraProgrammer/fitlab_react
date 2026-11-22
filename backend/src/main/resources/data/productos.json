@@ -1,0 +1,110 @@
+[
+  {
+    "id": 1,
+    "nombre": "Creatina Monohidratada OstroVit 300g",
+    "precio": 24990,
+    "categoria": "Suplementos",
+    "descripcion": "Creatina 100% pura para aumentar fuerza y rendimiento muscular.",
+    "imagen": "/creatina.webp",
+    "stock": 10
+  },
+  {
+    "id": 2,
+    "nombre": "Proteína Whey Pro-Win 1kg",
+    "precio": 38990,
+    "categoria": "Suplementos",
+    "descripcion": "Proteína de suero de leche para acelerar la recuperación muscular.",
+    "imagen": "/proteina.jpg",
+    "stock": 10
+  },
+  {
+    "id": 3,
+    "nombre": "Pre-Entreno Non-Stim Pump 500g",
+    "precio": 29990,
+    "categoria": "Suplementos",
+    "descripcion": "Fórmula de bombeo y vasodilatación para energía y resistencia.",
+    "imagen": "/preentreno.avif",
+    "stock": 10
+  },
+  {
+    "id": 4,
+    "nombre": "BCAA Aminoácidos 200g",
+    "precio": 18990,
+    "categoria": "Suplementos",
+    "descripcion": "Aminoácidos ramificados para reducir la fatiga durante el entrenamiento.",
+    "imagen": "/bcaa aminoacidos.webp",
+    "stock": 10
+  },
+  {
+    "id": 5,
+    "nombre": "Multivitamínico Golden Years 90 Tabs",
+    "precio": 14990,
+    "categoria": "Suplementos",
+    "descripcion": "Complejo vitamínico diario para salud y rendimiento deportivo.",
+    "imagen": "/multivitaminico.webp",
+    "stock": 10
+  },
+  {
+    "id": 6,
+    "nombre": "Banda de Resistencia Alta HWM (Azul)",
+    "precio": 8990,
+    "categoria": "Accesorios",
+    "descripcion": "Banda elástica de alta tensión para ejercicios de fuerza y calistenia.",
+    "imagen": "/banda elastica alta.webp",
+    "stock": 10
+  },
+  {
+    "id": 7,
+    "nombre": "Banda Elástica Media HWM (Roja)",
+    "precio": 7990,
+    "categoria": "Accesorios",
+    "descripcion": "Tensión media ideal para calentamiento, activación y movilidad.",
+    "imagen": "/banda elastica media.webp",
+    "stock": 10
+  },
+  {
+    "id": 8,
+    "nombre": "Banda Elástica Suave",
+    "precio": 6990,
+    "categoria": "Accesorios",
+    "descripcion": "Banda ligera para estiramientos y rehabilitación.",
+    "imagen": "/banda elastica suave.webp",
+    "stock": 10
+  },
+  {
+    "id": 9,
+    "nombre": "Shaker Botella BodyBoost 700ml",
+    "precio": 5990,
+    "categoria": "Accesorios",
+    "descripcion": "Botella mezcladora negra hermética, libre de BPA.",
+    "imagen": "/shaker.webp",
+    "stock": 10
+  },
+  {
+    "id": 10,
+    "nombre": "Mancuerna Ajustable Selectiva Ironside",
+    "precio": 89900,
+    "categoria": "Equipamiento",
+    "descripcion": "Mancuerna con selector rápido de peso y base de soporte incluida.",
+    "imagen": "/mancuernas ajustable.webp",
+    "stock": 10
+  },
+  {
+    "id": 11,
+    "nombre": "Mancuernas Hexagonales 10kg (Par)",
+    "precio": 45990,
+    "categoria": "Equipamiento",
+    "descripcion": "Mancuernas recubiertas de goma con agarre ergonómico.",
+    "imagen": "/mancuernas hexagonales 10kg.webp",
+    "stock": 10
+  },
+  {
+    "id": 12,
+    "nombre": "Mancuernas Hexagonales 5kg (Par)",
+    "precio": 25990,
+    "categoria": "Equipamiento",
+    "descripcion": "Mancuernas ideales para tonificación y trabajo funcional.",
+    "imagen": "/mancuernas 5kg.webp",
+    "stock": 10
+  }
+]

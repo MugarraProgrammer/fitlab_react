@@ -1,0 +1,19 @@
+# MongoDB local en Docker para FitLab.
+# Iniciar:  docker compose up -d
+# Detener:  docker compose down        (los datos se conservan en el volumen)
+services:
+  mongo:
+    image: mongo:8
+    container_name: mongo-fitlab
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin123
+      MONGO_INITDB_DATABASE: fitlab
+    volumes:
+      - mongo-data:/data/db
+      # Crea el usuario fitlab_user la primera vez que se inicia el contenedor.
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+volumes:
+  mongo-data:
